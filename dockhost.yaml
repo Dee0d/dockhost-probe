@@ -1,0 +1,35 @@
+# Манифест для Dockhost CLI:  dockhost compose apply dockhost.yaml
+# Документация: https://docs.dockhost.ru/cli
+version: 1
+
+project: my-project
+
+# Контейнеры проекта
+containers:
+
+    website:
+        # Укажите свой образ: либо из реестра, либо собранный пайплайном Dockhost из Git
+        image: docker.io/<ваш-логин>/dockhost-probe:latest
+        replicas: 1
+        resources:
+            memory: 256MiB
+            cpu: 1
+            cpuFraction: 10
+        ports:
+        - 80
+
+# Сеть: динамический домен 3-го уровня + маршрут на контейнер
+network:
+
+    domains:
+
+        # ~ означает «выдать динамический домен *.dockhost.ru»
+        website: ~
+
+    routes:
+
+        website:
+            domain: website
+            path: /
+            service: website
+            port: 80/TCP
